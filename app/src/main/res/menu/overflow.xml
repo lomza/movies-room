@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.lomza.moviesroom.MainActivity">
+    <item
+        android:id="@+id/action_delete_list_data"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_delete_list_data"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_re_create_database"
+        android:orderInCategory="2"
+        android:title="@string/menu_item_re_create_database"
+        app:showAsAction="never" />
+</menu>

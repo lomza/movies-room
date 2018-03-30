@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Movies Room Example</string>
+    <string name="title_movies">Movies</string>
+    <string name="title_directors">Directors</string>
+    <string name="menu_item_delete_list_data">Delete list data</string>
+    <string name="menu_item_re_create_database">Re-create database</string>
+    <string name="movie_title">Title</string>
+    <string name="movie_director">Director</string>
+    <string name="director_full_name">Full Name</string>
+    <string name="dialog_movie_title">Movie</string>
+    <string name="dialog_director_title">Director</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+</resources>
