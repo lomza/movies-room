@@ -15,7 +15,7 @@ import android.support.annotation.NonNull;
                 parentColumns = "did",
                 childColumns = "directorId",
                 onDelete = ForeignKey.CASCADE),
-indices = {@Index("directorId")})
+        indices = {@Index("title"), @Index("directorId")})
 public class Movie {
 
     @PrimaryKey(autoGenerate = true)

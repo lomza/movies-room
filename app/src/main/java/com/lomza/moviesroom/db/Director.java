@@ -2,13 +2,16 @@ package com.lomza.moviesroom.db;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 /**
  * @author Antonina
  */
-@Entity(tableName = "director")
+@Entity(tableName = "director",
+        indices = {@Index("full_name")})
 public class Director {
 
     @PrimaryKey(autoGenerate = true)
@@ -19,7 +22,10 @@ public class Director {
     @NonNull
     public String fullName;
 
-    public Director (@NonNull String fullName) {
+    @Ignore
+    public int age;
+
+    public Director(@NonNull String fullName) {
         this.fullName = fullName;
     }
 }
