@@ -112,7 +112,9 @@ public class MovieSaveDialogFragment extends DialogFragment {
                 }
             }
         } else {
-            // insert a new row only if full name is not already in DB
+            // we need director id for movie object; in case director is already in DB,
+            // insert() would return -1, so we manually check if it exists and get
+            // the id of already saved director
             Director newDirector = directorDao.findDirectorByName(movieDirectorFullName);
             if (newDirector == null) {
                 directorId = (int) directorDao.insert(new Director(movieDirectorFullName));

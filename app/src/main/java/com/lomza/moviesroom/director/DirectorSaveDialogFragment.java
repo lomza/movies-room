@@ -22,7 +22,7 @@ import com.lomza.moviesroom.db.MoviesDatabase;
 
 public class DirectorSaveDialogFragment extends DialogFragment {
     private Context context;
-    private String directorFullName;
+    private String directorFullNameExtra;
 
     private static final String EXTRA_DIRECTOR_FULL_NAME = "director_full_name";
     public static final String TAG_DIALOG_DIRECTOR_SAVE = "dialog_director_save";
@@ -48,7 +48,7 @@ public class DirectorSaveDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        directorFullName = args.getString(EXTRA_DIRECTOR_FULL_NAME);
+        directorFullNameExtra = args.getString(EXTRA_DIRECTOR_FULL_NAME);
     }
 
     @NonNull
@@ -57,9 +57,9 @@ public class DirectorSaveDialogFragment extends DialogFragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_director, null);
         final EditText directorEditText = view.findViewById(R.id.etDirectorFullName);
-        if (directorFullName != null) {
-            directorEditText.setText(directorFullName);
-            directorEditText.setSelection(directorFullName.length());
+        if (directorFullNameExtra != null) {
+            directorEditText.setText(directorFullNameExtra);
+            directorEditText.setSelection(directorFullNameExtra.length());
         }
 
         alertDialogBuilder.setView(view)
@@ -87,9 +87,9 @@ public class DirectorSaveDialogFragment extends DialogFragment {
 
         DirectorDao directorDao = MoviesDatabase.getDatabase(context).directorDao();
 
-        if (directorFullName != null) {
+        if (directorFullNameExtra != null) {
             // clicked on item row -> update
-            Director directorToUpdate = directorDao.findDirectorByName(directorFullName);
+            Director directorToUpdate = directorDao.findDirectorByName(directorFullNameExtra);
             if (directorToUpdate != null) {
                 if (!directorToUpdate.fullName.equals(fullName)) {
                     directorToUpdate.fullName = fullName;
@@ -97,11 +97,7 @@ public class DirectorSaveDialogFragment extends DialogFragment {
                 }
             }
         } else {
-            // insert a new row only if full name is not already in DB
-            Director newDirector = directorDao.findDirectorByName(fullName);
-            if (newDirector == null) {
-                directorDao.insert(new Director(fullName));
-            }
+            directorDao.insert(new Director(fullName));
         }
     }
 }

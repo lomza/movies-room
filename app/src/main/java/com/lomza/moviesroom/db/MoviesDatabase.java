@@ -69,8 +69,6 @@ public abstract class MoviesDatabase extends RoomDatabase {
             Director directorThree = new Director("Morten Tyldum");
 
             Movie movieOne = new Movie("The Big Short", (int) directorDao.insert(directorOne));
-            // no UNIQUE or condition on inserting directors with same full names,
-            // so we will take the id of inserted directorTwo and use it (but not create!) twice.
             final int dIdTwo = (int) directorDao.insert(directorTwo);
             Movie movieTwo = new Movie("Arrival", dIdTwo);
             Movie movieThree = new Movie("Blade Runner 2049", dIdTwo);

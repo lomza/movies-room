@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "33e8a3dadb919dc74aaf27ebe6dddc7e",
+    "identityHash": "b54788198efea4a644d83b8e8aad1cd4",
     "entities": [
       {
         "tableName": "movie",
@@ -34,6 +34,14 @@
           "autoGenerate": true
         },
         "indices": [
+          {
+            "name": "index_movie_title",
+            "unique": false,
+            "columnNames": [
+              "title"
+            ],
+            "createSql": "CREATE  INDEX `index_movie_title` ON `${TABLE_NAME}` (`title`)"
+          },
           {
             "name": "index_movie_directorId",
             "unique": false,
@@ -80,13 +88,22 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_director_full_name",
+            "unique": true,
+            "columnNames": [
+              "full_name"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_director_full_name` ON `${TABLE_NAME}` (`full_name`)"
+          }
+        ],
         "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"33e8a3dadb919dc74aaf27ebe6dddc7e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b54788198efea4a644d83b8e8aad1cd4\")"
     ]
   }
 }

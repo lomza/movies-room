@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
  * @author Antonina
  */
 @Entity(tableName = "director",
-        indices = {@Index("full_name")})
+        indices = {@Index(value = "full_name", unique = true)})
 public class Director {
 
     @PrimaryKey(autoGenerate = true)
