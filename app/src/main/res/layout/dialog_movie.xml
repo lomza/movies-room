@@ -11,12 +11,14 @@
         android:layout_height="wrap_content"
         android:hint="@string/movie_title"
         android:inputType="textCapWords"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/etMovieDirectorFullName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/movie_director"
-        android:inputType="textCapWords" />
+        android:inputType="textCapWords"
+        android:importantForAutofill="no" />
 </LinearLayout>

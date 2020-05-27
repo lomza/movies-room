@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b54788198efea4a644d83b8e8aad1cd4",
+    "identityHash": "627455825d506754f171b32a983cfc02",
     "entities": [
       {
         "tableName": "movie",
@@ -40,7 +40,7 @@
             "columnNames": [
               "title"
             ],
-            "createSql": "CREATE  INDEX `index_movie_title` ON `${TABLE_NAME}` (`title`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_movie_title` ON `${TABLE_NAME}` (`title`)"
           },
           {
             "name": "index_movie_directorId",
@@ -48,7 +48,7 @@
             "columnNames": [
               "directorId"
             ],
-            "createSql": "CREATE  INDEX `index_movie_directorId` ON `${TABLE_NAME}` (`directorId`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_movie_directorId` ON `${TABLE_NAME}` (`directorId`)"
           }
         ],
         "foreignKeys": [
@@ -95,15 +95,16 @@
             "columnNames": [
               "full_name"
             ],
-            "createSql": "CREATE UNIQUE INDEX `index_director_full_name` ON `${TABLE_NAME}` (`full_name`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_director_full_name` ON `${TABLE_NAME}` (`full_name`)"
           }
         ],
         "foreignKeys": []
       }
     ],
+    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b54788198efea4a644d83b8e8aad1cd4\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '627455825d506754f171b32a983cfc02')"
     ]
   }
 }
