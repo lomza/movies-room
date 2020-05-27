@@ -3,9 +3,7 @@ package com.lomza.moviesroom.movie
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import com.lomza.moviesroom.db.Movie
-import com.lomza.moviesroom.db.MovieDao
-import com.lomza.moviesroom.db.MoviesDatabase
+import com.lomza.moviesroom.db.*
 
 /**
  * @author Antonina
@@ -13,21 +11,25 @@ import com.lomza.moviesroom.db.MoviesDatabase
 class MoviesViewModel(application: Application) : AndroidViewModel(application) {
 
     private val movieDao: MovieDao = MoviesDatabase.getDatabase(application).movieDao()
+    private val directorDao: DirectorDao = MoviesDatabase.getDatabase(application).directorDao()
+
     val moviesList: LiveData<List<Movie>>
+    val directorsList: LiveData<List<Director>>
 
     init {
         moviesList = movieDao.allMovies
+        directorsList = directorDao.allDirectors
     }
 
-    fun insert(vararg movies: Movie?) {
+    suspend fun insert(vararg movies: Movie) {
         movieDao.insert(*movies)
     }
 
-    fun update(movie: Movie?) {
+    suspend fun update(movie: Movie) {
         movieDao.update(movie)
     }
 
-    fun deleteAll() {
+    suspend fun deleteAll() {
         movieDao.deleteAll()
     }
 }

@@ -10,12 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lomza.moviesroom.db.MoviesDatabase
+import com.lomza.moviesroom.db.rePopulateDb
 import com.lomza.moviesroom.director.DirectorSaveDialogFragment
 import com.lomza.moviesroom.director.DirectorsListFragment
 import com.lomza.moviesroom.movie.MovieSaveDialogFragment
 import com.lomza.moviesroom.movie.MoviesListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -103,7 +107,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun reCreateDatabase() {
-        MoviesDatabase.getDatabase(this).clearDb()
+        GlobalScope.launch(Dispatchers.IO) {
+            rePopulateDb(MoviesDatabase.getDatabase(this@MainActivity))
+        }
     }
 
     companion object {

@@ -19,15 +19,15 @@ class DirectorsViewModel(application: Application) : AndroidViewModel(applicatio
         directorList = directorDao.allDirectors
     }
 
-    fun insert(vararg directors: Director?) {
+    suspend fun insert(vararg directors: Director) {
         directorDao.insert(*directors)
     }
 
-    fun update(director: Director?) {
+    suspend fun update(director: Director) {
         directorDao.update(director)
     }
 
-    fun deleteAll() {
+    suspend fun deleteAll() {
         directorDao.deleteAll()
     }
 }

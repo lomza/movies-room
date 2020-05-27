@@ -10,6 +10,9 @@ import com.lomza.moviesroom.R
 import com.lomza.moviesroom.db.Director
 import com.lomza.moviesroom.db.Movie
 import com.lomza.moviesroom.db.MoviesDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * @author Antonina
@@ -41,19 +44,21 @@ class MovieSaveDialogFragment : DialogFragment() {
         }
         alertDialogBuilder.setView(view)
             .setTitle(getString(R.string.dialog_movie_title))
-            .setPositiveButton(R.string.save) { _, _ -> saveMovie(movieEditText.text.toString(), movieDirectorEditText.text.toString()) }
+            .setPositiveButton(R.string.save) { _, _ ->
+                GlobalScope.launch(Dispatchers.IO) { saveMovie(movieEditText.text.toString(), movieDirectorEditText.text.toString()) }
+            }
             .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
 
         return alertDialogBuilder.create()
     }
 
-    private fun saveMovie(movieTitle: String, movieDirectorFullName: String) {
+    private suspend fun saveMovie(movieTitle: String, movieDirectorFullName: String) {
         if (TextUtils.isEmpty(movieTitle) || TextUtils.isEmpty(movieDirectorFullName)) {
             return
         }
-        val directorDao = MoviesDatabase.getDatabase(context).directorDao()
-        val movieDao = MoviesDatabase.getDatabase(context).movieDao()
-        var directorId = -1
+        val directorDao = MoviesDatabase.getDatabase(requireContext()).directorDao()
+        val movieDao = MoviesDatabase.getDatabase(requireContext()).movieDao()
+        var directorId: Long = -1L
         if (movieDirectorFullNameExtra != null) {
             // clicked on item row -> update
             val directorToUpdate = directorDao.findDirectorByName(movieDirectorFullNameExtra)
@@ -69,7 +74,7 @@ class MovieSaveDialogFragment : DialogFragment() {
             // insert() would return -1, so we manually check if it exists and get
             // the id of already saved director
             val newDirector = directorDao.findDirectorByName(movieDirectorFullName)
-            directorId = newDirector?.id ?: directorDao.insert(Director(movieDirectorFullName)).toInt()
+            directorId = newDirector?.id ?: directorDao.insert(Director(fullName = movieDirectorFullName))
         }
 
         if (movieTitleExtra != null) {
@@ -78,7 +83,7 @@ class MovieSaveDialogFragment : DialogFragment() {
             if (movieToUpdate != null) {
                 if (movieToUpdate.title != movieTitle) {
                     movieToUpdate.title = movieTitle
-                    if (directorId != -1) {
+                    if (directorId != -1L) {
                         movieToUpdate.directorId = directorId
                     }
                     movieDao.update(movieToUpdate)
@@ -86,15 +91,7 @@ class MovieSaveDialogFragment : DialogFragment() {
             }
         } else {
             // we can have many movies with same title but different director
-            val newMovie = movieDao.findMovieByTitle(movieTitle)
-            if (newMovie == null) {
-                movieDao.insert(Movie(movieTitle, directorId))
-            } else {
-                if (newMovie.directorId != directorId) {
-                    newMovie.directorId = directorId
-                    movieDao.update(newMovie)
-                }
-            }
+            movieDao.insert(Movie(title = movieTitle, directorId = directorId))
         }
     }
 
@@ -103,7 +100,6 @@ class MovieSaveDialogFragment : DialogFragment() {
         private const val EXTRA_MOVIE_DIRECTOR_FULL_NAME = "movie_director_full_name"
         const val TAG_DIALOG_MOVIE_SAVE = "dialog_movie_save"
 
-        @JvmStatic
         fun newInstance(movieTitle: String?, movieDirectorFullName: String?): MovieSaveDialogFragment {
             val fragment = MovieSaveDialogFragment()
             val args = Bundle().apply {

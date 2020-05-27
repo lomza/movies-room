@@ -9,6 +9,9 @@ import androidx.fragment.app.DialogFragment
 import com.lomza.moviesroom.R
 import com.lomza.moviesroom.db.Director
 import com.lomza.moviesroom.db.MoviesDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * @author Antonina
@@ -30,17 +33,19 @@ class DirectorSaveDialogFragment : DialogFragment() {
         directorEditText.setSelection(directorFullNameExtra?.length ?: 0)
         alertDialogBuilder.setView(view)
             .setTitle(getString(R.string.dialog_director_title))
-            .setPositiveButton(R.string.save) { _, _ -> saveDirector(directorEditText.text.toString()) }
+            .setPositiveButton(R.string.save) { _, _ ->
+                GlobalScope.launch(Dispatchers.IO) { saveDirector(directorEditText.text.toString()) }
+            }
             .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
 
         return alertDialogBuilder.create()
     }
 
-    private fun saveDirector(fullName: String) {
+    private suspend fun saveDirector(fullName: String) {
         if (TextUtils.isEmpty(fullName)) {
             return
         }
-        val directorDao = MoviesDatabase.getDatabase(context).directorDao()
+        val directorDao = MoviesDatabase.getDatabase(requireContext()).directorDao()
         if (directorFullNameExtra != null) {
             // clicked on item row -> update
             val directorToUpdate = directorDao.findDirectorByName(directorFullNameExtra)
@@ -51,7 +56,7 @@ class DirectorSaveDialogFragment : DialogFragment() {
                 }
             }
         } else {
-            directorDao.insert(Director(fullName))
+            directorDao.insert(Director(fullName = fullName))
         }
     }
 

@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lomza.moviesroom.R
 import com.lomza.moviesroom.db.Movie
+import com.lomza.moviesroom.db.MoviesDatabase
+import kotlinx.coroutines.*
 
 /**
  * @author Antonina
@@ -40,18 +42,31 @@ class MoviesListFragment : Fragment() {
                 moviesListAdapter.setMovieList(movies)
             }
         )
+
+        moviesViewModel.directorsList.observe(this,
+            Observer { _ ->
+                // we need to refresh the movies list in case when director's name changed
+                moviesViewModel.moviesList.value?.let {
+                    moviesListAdapter.setMovieList(it)
+                }
+            }
+        )
+    }
+
+    private suspend fun getDirectorFullName(movie: Movie): String? {
+        return MoviesDatabase.getDatabase(requireContext()).directorDao().findDirectorById(movie.directorId)?.fullName
     }
 
     private fun initView(view: View) {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerview_movies)
-        moviesListAdapter = MoviesListAdapter(requireContext())
+        moviesListAdapter = MoviesListAdapter(this)
         recyclerView.adapter = moviesListAdapter
         recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     fun removeData() {
-        moviesViewModel.deleteAll()
+        GlobalScope.launch(Dispatchers.IO) { moviesViewModel.deleteAll() }
     }
 
     companion object {
