@@ -26,7 +26,7 @@ abstract class MoviesDatabase : RoomDatabase() {
                 synchronized(MoviesDatabase::class.java) {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(context.applicationContext, MoviesDatabase::class.java, DB_NAME)
-                            .allowMainThreadQueries() // SHOULD NOT BE USED IN PRODUCTION !!!
+                            //.allowMainThreadQueries() // Uncomment if you don't want to use RxJava or coroutines just yet (blocks UI thread)
                             .addCallback(object : Callback() {
                                 override fun onCreate(db: SupportSQLiteDatabase) {
                                     super.onCreate(db)
