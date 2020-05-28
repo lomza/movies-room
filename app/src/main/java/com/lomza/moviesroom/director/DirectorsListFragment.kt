@@ -58,8 +58,6 @@ class DirectorsListFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): DirectorsListFragment {
-            return DirectorsListFragment()
-        }
+        fun newInstance(): DirectorsListFragment = DirectorsListFragment()
     }
 }
