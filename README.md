@@ -6,4 +6,4 @@ All code is in Kotlin.
 
 I explain the code in details [here](https://medium.com/@tonia.tkachuk/android-app-example-using-room-database-63f7091e69af).
 
-![Screenshots](https://image.ibb.co/mm3ex7/movies_screenshot.png)
+![Screenshots](movies-room.png)
