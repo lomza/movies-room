@@ -4,6 +4,7 @@
     <string name="title_directors">Directors</string>
     <string name="menu_item_delete_list_data">Delete list data</string>
     <string name="menu_item_re_create_database">Re-create database</string>
+    <string name="menu_item_export_to_csv_file">Export DB table to CSV file</string>
     <string name="movie_title">Title</string>
     <string name="movie_director">Director</string>
     <string name="director_full_name">Full Name</string>
@@ -11,4 +12,6 @@
     <string name="dialog_director_title">Director</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="csv_file_generated_text">CSV file generated!</string>
+    <string name="csv_file_not_generated_text">Something went wrong. Please try again.</string>
 </resources>

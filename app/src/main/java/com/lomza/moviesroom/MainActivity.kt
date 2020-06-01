@@ -3,6 +3,7 @@ package com.lomza.moviesroom
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
@@ -87,28 +88,53 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == R.id.action_delete_list_data) {
-            deleteCurrentListData()
-            return true
-        } else if (id == R.id.action_re_create_database) {
-            reCreateDatabase()
-            return true
+        return when (item.itemId) {
+            R.id.action_delete_list_data -> {
+                deleteCurrentListData()
+                true
+            }
+            R.id.action_re_create_database -> {
+                reCreateDatabase()
+                true
+            }
+            R.id.action_export_to_csv_file -> {
+                exportDatabaseToCSVFile()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun deleteCurrentListData() {
         if (MOVIES_SHOWN) {
-            (shownFragment as MoviesListFragment?)!!.removeData()
+            (shownFragment as MoviesListFragment).removeData()
         } else {
-            (shownFragment as DirectorsListFragment?)!!.removeData()
+            (shownFragment as DirectorsListFragment).removeData()
         }
     }
 
     private fun reCreateDatabase() {
         GlobalScope.launch(Dispatchers.IO) {
             rePopulateDb(MoviesDatabase.getDatabase(this@MainActivity))
+        }
+    }
+    private fun getCSVFileName() : String =
+        if (MOVIES_SHOWN) "MoviesRoomExample.csv" else "DirectorsRoomExample.csv"
+
+    private fun exportDatabaseToCSVFile() {
+        val csvFile = generateFile(this, getCSVFileName())
+        if (csvFile != null) {
+            if (MOVIES_SHOWN) {
+                (shownFragment as MoviesListFragment).exportMoviesWithDirectorsToCSVFile(csvFile)
+            } else {
+                (shownFragment as DirectorsListFragment).exportDirectorsToCSVFile(csvFile)
+            }
+
+            Toast.makeText(this, getString(R.string.csv_file_generated_text), Toast.LENGTH_LONG).show()
+            val intent = goToFileIntent(this, csvFile)
+            startActivity(intent)
+        } else {
+            Toast.makeText(this, getString(R.string.csv_file_not_generated_text), Toast.LENGTH_LONG).show()
         }
     }
 

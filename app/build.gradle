@@ -20,8 +20,7 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [
-                        "room.schemaLocation": "$projectDir/src/main/assets/schemas".toString(),
-                        "room.incremental": "true"
+                        "room.schemaLocation": "$projectDir/src/main/assets/schemas".toString()
                 ]
             }
         }
@@ -58,4 +57,6 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
+    implementation "com.github.doyaaaaaken:kotlin-csv-jvm:0.9.0"
 }

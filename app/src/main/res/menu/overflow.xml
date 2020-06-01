@@ -13,4 +13,10 @@
         android:orderInCategory="2"
         android:title="@string/menu_item_re_create_database"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_export_to_csv_file"
+        android:orderInCategory="3"
+        android:title="@string/menu_item_export_to_csv_file"
+        app:showAsAction="never" />
 </menu>

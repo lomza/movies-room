@@ -10,10 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.lomza.moviesroom.R
+import com.lomza.moviesroom.db.Director
 import com.lomza.moviesroom.db.Movie
 import com.lomza.moviesroom.db.MoviesDatabase
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.File
 
 /**
  * @author Antonina
@@ -22,6 +27,7 @@ class MoviesListFragment : Fragment() {
 
     private lateinit var moviesListAdapter: MoviesListAdapter
     private lateinit var moviesViewModel: MoviesViewModel
+    private lateinit var moviesList: List<Movie>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +45,7 @@ class MoviesListFragment : Fragment() {
         moviesViewModel = ViewModelProvider(this).get(MoviesViewModel::class.java)
         moviesViewModel.moviesList.observe(this,
             Observer { movies: List<Movie> ->
+                moviesList = movies
                 moviesListAdapter.setMovieList(movies)
             }
         )
@@ -47,6 +54,7 @@ class MoviesListFragment : Fragment() {
             Observer { _ ->
                 // we need to refresh the movies list in case when director's name changed
                 moviesViewModel.moviesList.value?.let {
+                    moviesList = it
                     moviesListAdapter.setMovieList(it)
                 }
             }
@@ -67,6 +75,17 @@ class MoviesListFragment : Fragment() {
 
     fun removeData() {
         GlobalScope.launch(Dispatchers.IO) { moviesViewModel.deleteAll() }
+    }
+
+    fun exportMoviesWithDirectorsToCSVFile(csvFile: File) {
+        csvWriter().open(csvFile, append = false) {
+            // Header
+            writeRow(listOf("[id]", "[${Movie.TABLE_NAME}]", "[${Director.TABLE_NAME}]"))
+            moviesList.forEachIndexed { index, movie ->
+                val directorName: String = moviesViewModel.directorsList.value?.find { it.id == movie.directorId }?.fullName ?: ""
+                writeRow(listOf(index, movie.title, directorName))
+            }
+        }
     }
 
     companion object {
